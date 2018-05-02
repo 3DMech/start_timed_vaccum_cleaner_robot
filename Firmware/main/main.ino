@@ -189,8 +189,8 @@ void handleRoot() {
   Serial.println("Enter handleRoot");
   String header;
 
-  String content = "<html><H2>Karls Webinterface</H2><br>";
-  content += "<head><title>Karls Webinterface</title></head>";
+  String content = "<html><H2>start timed vacuum cleaner robot</H2><br>";
+  content += "<head><title>RoboVac</title></head>";
   content += "<body bgcolor=\"#d0d0F0\">";
   content += "<p><a href=\"ir?code=1\">straight</a></p>";
   content += "<p><a href=\"ir?code=2\">back</a></p>";
