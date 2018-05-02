@@ -16,4 +16,3 @@ const int NTP_PACKET_SIZE = 48;
 
 //Intensive cleaning
 const int intensive_cleaning_frequency = 3; //
-
