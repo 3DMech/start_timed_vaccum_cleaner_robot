@@ -20,7 +20,7 @@ Make sure to place the IR LED close to the robot to make sure the commands reach
 ![layout](https://github.com/3DMech/start_timed_vacuum_cleaner_robot/blob/master/Media/Pictures/Circuit_diagram.png)
 
 ## Partlist:
-  - Wemos D1 min
+  - Wemos D1 mini
   - IR LED (940nm)
   - current limiting resistor (220 Ohm)
   
