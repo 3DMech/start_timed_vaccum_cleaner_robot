@@ -1,8 +1,8 @@
 /* 
  *  Author  : Jan Buhlrich 
  *            Tjorben Eberle @TJ_ger
- *  Date    : April, 2018
- *  Project : Stat timed Vacuum cleaner robot
+ *  Date    : Mai, 2018
+ *  Project : Start timed Vacuum cleaner robot
  *  Desc    : 
  *  Version : 1.1
  *  
@@ -10,11 +10,16 @@
  *  Modell  : RoboVac
  *  Version : 11
  *  
- *  Hardware list:  -Wemos D1 mini
- *                  -
+ *  Hardware list:  - Wemos D1 mini
+ *                  - IR LED (we used 940µm)
+ *                  - Current limiting resistor (220 Ohm)
+ *
  *  circuit diagram:
- *  [Link]
+ *  https://github.com/3DMech/start_timed_vacuum_cleaner_robot_RoboVac/tree/master/Media/Pictures
  *  
+ *  Further project information:
+ *  https://github.com/3DMech/start_timed_vacuum_cleaner_robot_RoboVac
+ *
  *  Common mistakes & tips:
  *   
 */
@@ -62,6 +67,16 @@ String msg, tmp;
 void setup() {
   irsend.begin();
   Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
+  
+  //Print mac adress first
+  Serial.println("start_timed_vacuum_cleaner_robot_RoboVac"); 
+  Serial.println("Mac adress:");
+  WiFi.macAddress(MAC_array);
+  for (int i = 0; i < sizeof(MAC_array); ++i) {
+    sprintf(MAC_char, "%s%02x:", MAC_char, MAC_array[i]);
+  }
+  Serial.println(MAC_char); //- See more at: http://www.esp8266.com/viewtopic.php?f=29&t=3587#sthash.hV7FUT1J.dpuf
+
   WiFi.begin(ssid, password);
 
   // Wait for connection
@@ -75,14 +90,7 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  Serial.println("Mac-Adresse:");
-  WiFi.macAddress(MAC_array);
-  for (int i = 0; i < sizeof(MAC_array); ++i) {
-    sprintf(MAC_char, "%s%02x:", MAC_char, MAC_array[i]);
-  }
-
-  Serial.println(MAC_char); //- See more at: http://www.esp8266.com/viewtopic.php?f=29&t=3587#sthash.hV7FUT1J.dpuf
-
+ 
   server.on("/", handleRoot);
   server.on("/ir", handleIr);
   server.on("/inline", []() {
