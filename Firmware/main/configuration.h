@@ -16,3 +16,16 @@ const int NTP_PACKET_SIZE = 48;
 
 //Intensive cleaning
 const int intensive_cleaning_frequency = 3; //
+
+//MQTT
+#define MQTT_SERVER "192.168.178.35"  //you MQTT IP Address
+
+char const* actionTopic11 = "storage/Vacuumcleaner/start_auto";
+char const* actionTopic12 = "storage/Vacuumcleaner/start_corner";
+char const* actionTopic13 = "storage/Vacuumcleaner/start_max";
+char const* actionTopic21 = "storage/Vacuumcleaner/end";
+
+char const* confirmTopic11 = "storage/Vacuumcleaner/confirm_start_auto";
+char const* confirmTopic12 = "storage/Vacuumcleaner/confirm_start_corner";
+char const* confirmTopic13 = "storage/Vacuumcleaner/confirm_start_max";
+char const* confirmTopic21 = "storage/Vacuumcleaner/confirm_end";
