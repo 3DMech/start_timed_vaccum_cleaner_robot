@@ -1,0 +1,83 @@
+# Add the following lines of code to your 
+# configuration.yaml file on your Home Assistant system.
+#
+# Author    : Jan Buhlrich
+#             Tjorben Eberle @TJ_ger
+#   Date    : Mai, 2018
+#   Project : Start timed Vacuum cleaner robot
+#   Desc    :
+#   Version : 1.0
+#
+#   Company : Eufy
+#   Modell  : RoboVac
+#   Version : 11
+#
+#   Hardware list:  - Wemos D1 mini
+#                   - IR LED (we used 940µm)
+#                   - Current limiting resistor (220 Ohm)
+#
+#   circuit diagram:
+#   https://github.com/3DMech/start_timed_vacuum_cleaner_robot_RoboVac/tree/master/Media/Pictures
+#
+#   Further project information:
+#   https://github.com/3DMech/start_timed_vacuum_cleaner_robot_RoboVac
+#
+#   Common mistakes & tips:
+
+switch:
+    #RoboVac switches to start cleaning
+    #Add the following switches to your "switch:" in configuration.yaml!
+  - platform: mqtt
+    name: "Button_auto"
+    state_topic: "storage/Vacuumcleaner/confirm_start_auto"
+    command_topic: "storage/Vacuumcleaner/start_auto"
+    payload_on: "1"
+    payload_off: "0"
+    optimistic: false
+    retain: true
+  - platform: mqtt
+    name: "Button_corner"
+    state_topic: "storage/Vacuumcleaner/confirm_start_corner"
+    command_topic: "storage/Vacuumcleaner/start_corner"
+    payload_on: "1"
+    payload_off: "0"
+    optimistic: false
+    retain: true
+  - platform: mqtt
+    name: "Button_max"
+    state_topic: "storage/Vacuumcleaner/confirm_start_max"
+    command_topic: "storage/Vacuumcleaner/start_max"
+    payload_on: "1"
+    payload_off: "0"
+    optimistic: false
+    retain: true
+  - platform: mqtt
+    name: "Button_end"
+    state_topic: "storage/Vacuumcleaner/end"
+    command_topic: "storage/Vacuumcleaner/start_end"
+    payload_on: "1"
+    payload_off: "0"
+    optimistic: false
+    retain: true  
+
+    #RoboVac groups to start cleaning
+    #Add the following groups to your "group:" in configuration.yaml!
+group:
+
+# default_view only neccessary for first tests
+  default_view:
+    view: yes
+    icon: mdi:home
+    entities:
+      - group.RoboVac
+ 
+ # This will merge all the switches into one group!
+ # Important: add the control: hidden option, this will hide complete group switch
+  RoboVac:
+    name: RoboVac
+    control: hidden
+    entities:
+      - switch.Button_auto
+      - switch.Button_corner
+      - switch.Button_max
+      - switch.Button_end
