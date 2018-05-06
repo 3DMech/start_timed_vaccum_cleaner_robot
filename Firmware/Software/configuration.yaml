@@ -53,8 +53,8 @@ switch:
     retain: true
   - platform: mqtt
     name: "Button_end"
-    state_topic: "storage/Vacuumcleaner/end"
-    command_topic: "storage/Vacuumcleaner/start_end"
+    state_topic: "storage/Vacuumcleaner/confirm_end"
+    command_topic: "storage/Vacuumcleaner/end"
     payload_on: "1"
     payload_off: "0"
     optimistic: false
