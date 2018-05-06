@@ -7,8 +7,8 @@ IRsend irsend(IRPin);  // An IR LED is controlled by GPIO pin 4 (D2)
 
 ESP8266WebServer server(80);
 /* Set these to your desired credentials. */
-const char *ssid = "FRITZ!Box 7490";
-const char *password = "11507805580202423221";
+const char *ssid = "ADDYOURSSID";
+const char *password = "ADDYOURPW";
 
 const char* ntpServerName = "time.nist.gov";
 
@@ -18,13 +18,14 @@ const int NTP_PACKET_SIZE = 48;
 const int intensive_cleaning_frequency = 3; //
 
 //MQTT
-#define MQTT_SERVER "192.168.178.62"  //you MQTT IP Address
+#define MQTT_SERVER "YOURMQTT"  //you MQTT IP Address
 #define mqtt_username "mqtt_username" 
 #define mqtt_password "mqtt_password"
 #define mqtt_clientname "mqtt_clientname"
 
 //OTA
 #define otahostname "RoboVac"
+#define otapassword "123"
 
 char const* actionTopic11 = "storage/Vacuumcleaner/start_auto";
 char const* actionTopic12 = "storage/Vacuumcleaner/start_corner";
