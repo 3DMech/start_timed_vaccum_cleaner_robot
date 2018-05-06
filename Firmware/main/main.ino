@@ -101,6 +101,26 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+//TEST
+Serial.print("Attempting MQTT connection...");
+      String clientName;
+      clientName += "esp8266-";
+      uint8_t mac[6];
+      WiFi.macAddress(mac);
+      clientName += macToStr(mac);
+
+      if (client.connect((char*) clientName.c_str(), mqtt_username, mqtt_password)) {
+        Serial.print("\tMQTT Connected");
+        client.subscribe(actionTopic11);
+        client.subscribe(actionTopic12);
+        client.subscribe(actionTopic13);
+        client.subscribe(actionTopic14);
+      }
+      else {
+        Serial.println("\tFailed.");
+        abort();
+      }
+      //TEST END
 
   server.on("/", handleRoot);
   server.on("/ir", handleIr);
@@ -441,18 +461,18 @@ void callback(char* topic, byte* payload, unsigned int length) {
       client.publish(confirmTopic13, "0");
     }
   }
-  else if (topicStr == actionTopic21)
+  else if (topicStr == actionTopic14)
   {
     //turn the switch on if the payload is '1' and publish to the MQTT server a confirmation message
     if (payload[0] == '1') {
       end_cleaning();
-      client.publish(confirmTopic21, "1");
+      client.publish(confirmTopic14, "1");
     }
 
     //turn the switch off if the payload is '0' and publish to the MQTT server a confirmation message
     else if (payload[0] == '0') {
       end_cleaning();
-      client.publish(confirmTopic21, "0");
+      client.publish(confirmTopic14, "0");
     }
   }
 
@@ -463,3 +483,47 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+void reconnect() {
+  if (WiFi.status() != WL_CONNECTED) {
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    while (!client.connected()) {
+      Serial.print("Attempting MQTT connection...");
+      String clientName;
+      clientName += "esp8266-";
+      uint8_t mac[6];
+      WiFi.macAddress(mac);
+      clientName += macToStr(mac);
+
+      if (client.connect((char*) clientName.c_str(), mqtt_username, mqtt_password)) {
+        Serial.print("\tMQTT Connected");
+        client.subscribe(actionTopic11);
+        client.subscribe(actionTopic12);
+        client.subscribe(actionTopic13);
+        client.subscribe(actionTopic14);
+      }
+      else {
+        Serial.println("\tFailed.");
+        abort();
+      }
+    }
+  }
+}
+String macToStr(const uint8_t* mac) {
+
+  String result;
+
+  for (int i = 0; i < 6; ++i) {
+    result += String(mac[i], 16);
+
+    if (i < 5) {
+      result += ':';
+    }
+  }
+  return result;
+}
