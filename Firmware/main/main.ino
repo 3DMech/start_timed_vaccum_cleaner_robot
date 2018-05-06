@@ -37,6 +37,7 @@
 #include <ESP8266WiFi.h>
 //Upload over the Air
 #include <ArduinoOTA.h>
+#include <ESP8266mDNS.h>
 
 /*
   Local Headerfiles
@@ -80,6 +81,7 @@ void setup() {
   Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
 
   //Print mac adress first
+  Serial.println();
   Serial.println("start_timed_vacuum_cleaner_robot_RoboVac");
   Serial.println("Mac adress:");
   WiFi.macAddress(MAC_array);
@@ -88,6 +90,7 @@ void setup() {
   }
   Serial.println(MAC_char); //- See more at: http://www.esp8266.com/viewtopic.php?f=29&t=3587#sthash.hV7FUT1J.dpuf
 
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
   // Wait for connection
@@ -101,13 +104,44 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-//TEST
+
+//OTA TEST
+
+  ArduinoOTA.setHostname(otahostname);
+  ArduinoOTA.onStart([]() {
+    Serial.println("Start");
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+    else if (error == OTA_END_ERROR) Serial.println("End Failed");
+  });
+  ArduinoOTA.begin();
+  Serial.println("OTA Ready");
+  //Serial.print("IP address: "); not needed twice
+  Serial.println(WiFi.localIP());
+
+
+
+  
+//MQTT TEST
 Serial.print("Attempting MQTT connection...");
       String clientName;
-      clientName += "esp8266-";
-      uint8_t mac[6];
-      WiFi.macAddress(mac);
-      clientName += macToStr(mac);
+      clientName =mqtt_clientname;
+      
+      //Detele following if not used
+      //uint8_t mac[6];
+      //WiFi.macAddress(mac);
+      //clientName += macToStr(mac);
 
       if (client.connect((char*) clientName.c_str(), mqtt_username, mqtt_password)) {
         Serial.print("\tMQTT Connected");
@@ -120,7 +154,8 @@ Serial.print("Attempting MQTT connection...");
         Serial.println("\tFailed.");
         abort();
       }
-      //TEST END
+      
+//TEST END
 
   server.on("/", handleRoot);
   server.on("/ir", handleIr);
@@ -495,10 +530,10 @@ void reconnect() {
     while (!client.connected()) {
       Serial.print("Attempting MQTT connection...");
       String clientName;
-      clientName += "esp8266-";
-      uint8_t mac[6];
-      WiFi.macAddress(mac);
-      clientName += macToStr(mac);
+      clientName =mqtt_clientname;
+      //uint8_t mac[6];
+      //WiFi.macAddress(mac);
+     // clientName += macToStr(mac);
 
       if (client.connect((char*) clientName.c_str(), mqtt_username, mqtt_password)) {
         Serial.print("\tMQTT Connected");
@@ -514,6 +549,8 @@ void reconnect() {
     }
   }
 }
+
+//Delete macToStr if not used for mqtt name
 String macToStr(const uint8_t* mac) {
 
   String result;
