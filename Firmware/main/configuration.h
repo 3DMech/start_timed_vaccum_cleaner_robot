@@ -24,7 +24,7 @@ const int intensive_cleaning_frequency = 3; //
 #define mqtt_clientname "mqtt_clientname"
 
 //OTA
-#define otahostname "RoboVac bot"
+#define otahostname "RoboVac"
 
 char const* actionTopic11 = "storage/Vacuumcleaner/start_auto";
 char const* actionTopic12 = "storage/Vacuumcleaner/start_corner";

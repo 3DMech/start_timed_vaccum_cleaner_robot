@@ -108,6 +108,7 @@ void setup() {
 //OTA TEST
 
   ArduinoOTA.setHostname(otahostname);
+  ArduinoOTA.setPassword((const char *)"123");
   ArduinoOTA.onStart([]() {
     Serial.println("Start");
   });
@@ -178,9 +179,9 @@ Serial.print("Attempting MQTT connection...");
 }
 
 void loop() {
+  ArduinoOTA.handle();
   client.loop(); //maintain MQTT connection
   server.handleClient();
-  ArduinoOTA.handle();
   currentmillis = millis();
   currenttime = millis();
   if ((currenttime - oldtime) > 30000) {
@@ -201,10 +202,11 @@ void loop() {
       stoptime == true;
     }
   }
-
+/*
   if (currentmillis - previousmillis > 100) {
     previousmillis = millis();
   }
+*/
 }
 
 void left() {
