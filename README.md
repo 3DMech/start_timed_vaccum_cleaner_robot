@@ -12,7 +12,9 @@ What is this project about?
   - time schedules for your RoboVac to start cleaning
   - real time clock for precise timing
   - control RoboVac via webinterface
+  - control RoboVac via MQTT
   - set up file for Home Assistant (https://www.home-assistant.io)
+  - update via OTA 
 
 Make sure to place the IR LED close to the robot to make sure the commands reach its reciever diode.
   
@@ -27,4 +29,3 @@ Make sure to place the IR LED close to the robot to make sure the commands reach
   
   ## Future updates
   - control RoboVac via joystick
-  - control RoboVac via MQTT
