@@ -128,24 +128,14 @@ void setup() {
   });
   ArduinoOTA.begin();
   Serial.println("OTA Ready");
-  //Serial.print("IP address: "); not needed twice
-  Serial.println(WiFi.localIP());
-
-
-
   
 //MQTT TEST
 Serial.print("Attempting MQTT connection...");
       String clientName;
       clientName =mqtt_clientname;
       
-      //Detele following if not used
-      //uint8_t mac[6];
-      //WiFi.macAddress(mac);
-      //clientName += macToStr(mac);
-
       if (client.connect((char*) clientName.c_str(), mqtt_username, mqtt_password)) {
-        Serial.print("\tMQTT Connected");
+        Serial.println("\tMQTT Connected");
         client.subscribe(actionTopic11);
         client.subscribe(actionTopic12);
         client.subscribe(actionTopic13);
@@ -170,6 +160,7 @@ Serial.print("Attempting MQTT connection...");
   size_t headerkeyssize = sizeof(headerkeys) / sizeof(char*);
   server.collectHeaders(headerkeys, headerkeyssize );
   server.begin();
+  Serial.println("");
   Serial.println("HTTP server started");
 
   Serial.println("Starting UDP");
@@ -202,11 +193,11 @@ void loop() {
       stoptime == true;
     }
   }
-/*
-  if (currentmillis - previousmillis > 100) {
-    previousmillis = millis();
+
+  //Check if WiFi is still connected
+ if (WiFi.status() != WL_CONNECTED) {
+  reconnectwifi();
   }
-*/
 }
 
 void left() {
@@ -520,49 +511,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-void reconnect() {
-  if (WiFi.status() != WL_CONNECTED) {
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-    }
-  }
-
-  if (WiFi.status() == WL_CONNECTED) {
-    while (!client.connected()) {
-      Serial.print("Attempting MQTT connection...");
-      String clientName;
-      clientName =mqtt_clientname;
-      //uint8_t mac[6];
-      //WiFi.macAddress(mac);
-     // clientName += macToStr(mac);
-
-      if (client.connect((char*) clientName.c_str(), mqtt_username, mqtt_password)) {
-        Serial.print("\tMQTT Connected");
-        client.subscribe(actionTopic11);
-        client.subscribe(actionTopic12);
-        client.subscribe(actionTopic13);
-        client.subscribe(actionTopic14);
-      }
-      else {
-        Serial.println("\tFailed.");
-        abort();
-      }
-    }
-  }
+void reconnectwifi() {
+  Serial.println("Wifi connection lost. Rebooting...");
+  ESP.restart();
 }
 
-//Delete macToStr if not used for mqtt name
-String macToStr(const uint8_t* mac) {
-
-  String result;
-
-  for (int i = 0; i < 6; ++i) {
-    result += String(mac[i], 16);
-
-    if (i < 5) {
-      result += ':';
-    }
-  }
-  return result;
-}
