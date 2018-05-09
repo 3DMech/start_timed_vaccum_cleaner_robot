@@ -1,7 +1,7 @@
 # start timed vaccum cleaner robot
 
 ## overview
-A Script to auto start the RoboVac time schedule.
+A Script to auto start the RoboVac with a time schedule.
 We used the RoboVac 11:
 You can find more information on their website:
 
@@ -24,7 +24,7 @@ Make sure to place the IR LED close to the robot to make sure the commands reach
 
 ## Partlist:
   - Wemos D1 mini
-  - IR LED (940nm)
+  - IR LED (940nm, connect to pin D5)
   - current limiting resistor (220 Ohm)
   
   ## Future updates
