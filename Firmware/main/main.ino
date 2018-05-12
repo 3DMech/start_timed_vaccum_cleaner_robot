@@ -4,7 +4,7 @@
     Date    : Mai, 2018
     Project : Start timed Vacuum cleaner robot
     Desc    :
-    Version : 1.1
+    Version : 1.2
 
     Company : Eufy
     Modell  : RoboVac
@@ -105,9 +105,7 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-
-//OTA TEST
-
+//OTA
   ArduinoOTA.setHostname(otahostname);
   ArduinoOTA.setPassword(otapassword);
   ArduinoOTA.onStart([]() {
@@ -130,7 +128,7 @@ void setup() {
   ArduinoOTA.begin();
   Serial.println("OTA Ready");
   
-//MQTT TEST
+//MQTT
 Serial.print("Attempting MQTT connection...");
       String clientName;
       clientName =mqtt_clientname;
@@ -146,9 +144,7 @@ Serial.print("Attempting MQTT connection...");
         Serial.println("\tFailed.");
         abort();
       }
-      
-//TEST END
-
+     
   server.on("/", handleRoot);
   server.on("/ir", handleIr);
   server.on("/inline", []() {
