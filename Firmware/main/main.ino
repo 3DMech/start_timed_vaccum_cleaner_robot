@@ -27,17 +27,30 @@
 #ifndef UNIT_TEST
 #include <Arduino.h>
 #endif
+
+//IR support
 #include <IRremoteESP8266.h>
 #include <irsend.h>
 
+//Webserver
 #include <ESP8266WebServer.h>
+
+//Timeserver 
 #include <WiFiUdp.h>
+
 //MQTT
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
+
 //Upload over the Air
 #include <ArduinoOTA.h>
 #include <ESP8266mDNS.h>
+
+//Joystick support
+#include <Wire.h>
+#include <Adafruit_ADS1015.h>
+
+
 
 /*
   Local Headerfiles
@@ -54,6 +67,15 @@ IPAddress timeServerIP; // time.nist.gov NTP server address
 
 byte packetBuffer[ NTP_PACKET_SIZE];
 
+
+//Define analog digital converter
+
+Adafruit_ADS1115 ads;
+int16_t adc0;
+int16_t adc1;
+long currentmillis;
+long previousmillis;
+
 WiFiUDP udp;
 
 //MQTT
@@ -62,8 +84,7 @@ WiFiClient wifiClient;
 PubSubClient client(MQTT_SERVER, 1883, callback, wifiClient);
 
 
-long currentmillis, previousmillis;
-int16_t adc0, adc1;
+
 long currenttime = 0, oldtime = 0;
 int hour = 0, second = 0, number = 0;
 boolean stoptime = true;
@@ -164,6 +185,12 @@ Serial.print("Attempting MQTT connection...");
   udp.begin(localPort);
   Serial.print("Local port: ");
   Serial.println(udp.localPort());
+
+
+  //Setup adc
+
+  Wire.begin(D2, D1); //(SDA=D2, SCL=D1)
+  ads.begin();
 }
 
 void loop() {
@@ -194,6 +221,16 @@ void loop() {
   //Check if WiFi is still connected
  if (WiFi.status() != WL_CONNECTED) {
   reconnectwifi();
+  }
+
+  //Read ADC
+    currentmillis = millis();
+  if (currentmillis - previousmillis > 200)
+  {
+    previousmillis = millis();
+
+    adc0 = ads.readADC_SingleEnded(0);
+    adc1 = ads.readADC_SingleEnded(1);
   }
 }
 
